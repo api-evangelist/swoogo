@@ -1,0 +1,66 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Swoogo
+providerId: swoogo
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Event Management
+- Event Registration
+- Rate Limiting
+- Quotas
+description: >-
+  The Swoogo API enforces a credit-based rate limit rather than a fixed
+  requests-per-second cap. Each API account is allotted 2000 credits in every
+  rolling 10-minute period. Requests consume credits by operation type:
+  retrieving a collection (a "get all" list request) costs 10 credits, while
+  retrieving a single record costs 1 credit. When the credit allotment is
+  exhausted, further requests are throttled until the window refreshes.
+  Separately, OAuth2 bearer tokens expire every 30 minutes and must be
+  re-requested from POST /api/v1/oauth2/token.
+notes: >-
+  The published documentation states the 2000-credit / 10-minute window and the
+  10-credit (list) and 1-credit (single record) costs. Specific throttling
+  response codes and rate-limit response headers were not enumerated in the
+  documentation reviewed; a 429 (Too Many Requests) response is the assumed
+  throttling signal and should be confirmed against the live API during
+  reconciliation.
+sources:
+- https://swoogo.readme.io/docs/api-rate-limits
+- https://swoogo.readme.io/docs/authentication
+- https://swoogo.readme.io/reference
+responseCodes:
+  throttled: 429
+limits:
+- name: Credit Allotment
+  scope: account
+  metric: credits
+  limit: 2000 per 10 minutes
+  notes: Rolling 10-minute window; credits refresh as the window advances.
+- name: List Request Cost
+  scope: account
+  metric: credits
+  limit: 10 credits per request
+  notes: Any "get all" collection request (e.g. GET /events, GET /registrants) costs 10 credits.
+- name: Single Record Cost
+  scope: account
+  metric: credits
+  limit: 1 credit per request
+  notes: Retrieving a single record (e.g. GET /events/{id}) costs 1 credit.
+- name: Token Lifetime
+  scope: token
+  metric: minutes
+  limit: 30 minutes
+  notes: OAuth2 bearer tokens expire every 30 minutes and must be re-issued.
+policies:
+- name: Credit Budgeting
+  description: Prefer single-record fetches and pagination tuning over repeated full-collection pulls to conserve credits; a list request costs 10x a single-record request.
+- name: Token Refresh
+  description: Re-request a bearer token from /oauth2/token before the 30-minute expiry rather than assuming a token remains valid.
+- name: Backoff Strategy
+  description: On throttling (429), back off with exponential delay and jitter until the 10-minute credit window refreshes.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

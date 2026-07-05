@@ -1,0 +1,97 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Swoogo
+providerId: swoogo
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Event Management
+- Event Registration
+- SaaS
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Swoogo spend. Swoogo is billed as an annual, team-based (per-user)
+  SaaS subscription rather than on API or event volume - every plan includes
+  unlimited events and unlimited registrations, so the cost driver is the number
+  of team seats and the plan tier (Professional through Enterprise), not metered
+  consumption. The REST API is included with the subscription at no separate fee;
+  its only "budget" is the credit-based rate limit (2000 credits per 10 minutes),
+  which caps throughput but does not add cost. There is no free tier or free
+  trial. Implementation, onboarding, and third-party integrations can add
+  one-time professional-services costs on top of the subscription.
+notes: >-
+  Swoogo does not publish itemized list pricing; subscription figures are
+  third-party estimates and should be reconciled with Swoogo sales. Because
+  billing is a flat annual subscription, FinOps attention is on seat/tier
+  right-sizing and contract renewal rather than usage metering.
+sources:
+- https://swoogo.events/pricing/
+- https://www.g2.com/products/swoogo/pricing
+- https://swoogo.readme.io/docs/api-rate-limits
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Swoogo
+serviceCategory: Event Management Software
+billingModel:
+  pricingCategory: Subscription
+  billingFrequency: Annual
+  billingCurrency: USD
+  chargeCategories:
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Swoogo
+  ServiceCategory: Event Management Software
+  ProviderName: Swoogo
+  PublisherName: Swoogo
+  InvoiceIssuerName: Swoogo
+  BillingCurrency: USD
+  ChargeCategory: Purchase
+  PricingCategory: Subscription
+meters:
+- name: team_seats
+  description: Number of Swoogo user seats on the subscription - the primary cost driver.
+  unit: seats
+  aggregation: max
+  dimensions:
+  - account
+  - plan
+- name: plan_tier
+  description: Subscription tier (Professional, Growth/higher, Enterprise) that sets the seat price.
+  unit: tier
+  aggregation: max
+  dimensions:
+  - account
+- name: api_credits
+  description: Credit-based API rate-limit consumption (2000 credits per 10 minutes). Governs throughput, not billing.
+  unit: credits
+  aggregation: sum
+  dimensions:
+  - account
+- name: professional_services
+  description: One-time implementation, onboarding, training, and integration costs.
+  unit: engagements
+  aggregation: sum
+  dimensions:
+  - account
+principles:
+- name: Visibility
+  description: Track active team seats and plan tier against the annual contract; monitor API credit consumption to confirm the rate limit is sufficient without prompting a tier change.
+- name: Allocation
+  description: Map Swoogo seats to the teams/events that use them so the flat subscription can be charged back to the right cost centers.
+- name: Optimization
+  description: Right-size the number of seats and the plan tier to actual usage at renewal; batch API reads and prefer single-record fetches to stay within the credit window without upgrading.
+- name: Accountability
+  description: Assign an owner for the Swoogo contract and review seat counts and tier fit ahead of each annual renewal.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

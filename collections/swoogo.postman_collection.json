@@ -1,0 +1,302 @@
+{
+  "info": {
+    "name": "Swoogo API",
+    "description": "REST API for the Swoogo event management and event registration platform. Base URL: https://api.swoogo.com/api/v1. Authenticate with the OAuth2 client_credentials grant: Base64-encode your API key:secret (from My Profile > API Credentials in the Swoogo app), POST it to /oauth2/token, then send the returned bearer token as an Authorization header. Tokens expire every 30 minutes. This collection covers a representative subset of the ~140 documented endpoints across Events, Registrants, Sessions, Speakers, and Contacts.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{bearerToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.swoogo.com/api/v1", "type": "string" },
+    { "key": "bearerToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Request an API token",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "{{apiKey}}", "type": "string" },
+                { "key": "password", "value": "{{apiSecret}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded;charset=UTF-8" }
+            ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "grant_type", "value": "client_credentials" } ] },
+            "url": { "raw": "{{baseUrl}}/oauth2/token", "host": ["{{baseUrl}}"], "path": ["oauth2", "token"] },
+            "description": "Exchanges Base64-encoded client credentials for a bearer token that expires in 30 minutes."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "Get all events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/events", "host": ["{{baseUrl}}"], "path": ["events"] },
+            "description": "Returns a paginated list of events."
+          }
+        },
+        {
+          "name": "Create an event",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"My Event\",\n  \"start_date\": \"2026-09-01\",\n  \"end_date\": \"2026-09-02\",\n  \"timezone\": \"America/New_York\"\n}" },
+            "url": { "raw": "{{baseUrl}}/events", "host": ["{{baseUrl}}"], "path": ["events"] },
+            "description": "Creates a new event."
+          }
+        },
+        {
+          "name": "Get one event",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/events/:event_id", "host": ["{{baseUrl}}"], "path": ["events", ":event_id"], "variable": [{ "key": "event_id", "value": "" }] },
+            "description": "Retrieves a single event by ID."
+          }
+        },
+        {
+          "name": "Update an event",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/events/:event_id", "host": ["{{baseUrl}}"], "path": ["events", ":event_id"], "variable": [{ "key": "event_id", "value": "" }] },
+            "description": "Updates an existing event."
+          }
+        },
+        {
+          "name": "Clone an event",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/events/:event_id/clone", "host": ["{{baseUrl}}"], "path": ["events", ":event_id", "clone"], "variable": [{ "key": "event_id", "value": "" }] },
+            "description": "Creates a copy of an existing event."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Registrants",
+      "item": [
+        {
+          "name": "Get all registrants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/registrants?event_id=", "host": ["{{baseUrl}}"], "path": ["registrants"], "query": [{ "key": "event_id", "value": "" }] },
+            "description": "Returns a paginated list of registrants, optionally filtered by event."
+          }
+        },
+        {
+          "name": "Create a registrant",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"event_id\": 0,\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Doe\",\n  \"email\": \"jane@example.com\"\n}" },
+            "url": { "raw": "{{baseUrl}}/registrants", "host": ["{{baseUrl}}"], "path": ["registrants"] },
+            "description": "Registers a new attendee for an event."
+          }
+        },
+        {
+          "name": "Get one registrant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/registrants/:registrant_id", "host": ["{{baseUrl}}"], "path": ["registrants", ":registrant_id"], "variable": [{ "key": "registrant_id", "value": "" }] },
+            "description": "Retrieves a single registrant by ID."
+          }
+        },
+        {
+          "name": "Update a registrant",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/registrants/:registrant_id", "host": ["{{baseUrl}}"], "path": ["registrants", ":registrant_id"], "variable": [{ "key": "registrant_id", "value": "" }] },
+            "description": "Updates an existing registrant."
+          }
+        },
+        {
+          "name": "Check a registrant in",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/registrants/:registrant_id/check-in", "host": ["{{baseUrl}}"], "path": ["registrants", ":registrant_id", "check-in"], "variable": [{ "key": "registrant_id", "value": "" }] },
+            "description": "Marks a registrant as checked in to the event."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "Get all sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/sessions?event_id=", "host": ["{{baseUrl}}"], "path": ["sessions"], "query": [{ "key": "event_id", "value": "" }] },
+            "description": "Returns a paginated list of agenda sessions, optionally filtered by event."
+          }
+        },
+        {
+          "name": "Create a session",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"event_id\": 0,\n  \"name\": \"Opening Keynote\",\n  \"start_time\": \"2026-09-01T09:00:00Z\",\n  \"end_time\": \"2026-09-01T10:00:00Z\"\n}" },
+            "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] },
+            "description": "Creates a new agenda session."
+          }
+        },
+        {
+          "name": "Get one session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/sessions/:session_id", "host": ["{{baseUrl}}"], "path": ["sessions", ":session_id"], "variable": [{ "key": "session_id", "value": "" }] },
+            "description": "Retrieves a single session by ID."
+          }
+        },
+        {
+          "name": "Update a session",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/sessions/:session_id", "host": ["{{baseUrl}}"], "path": ["sessions", ":session_id"], "variable": [{ "key": "session_id", "value": "" }] },
+            "description": "Updates an existing session."
+          }
+        },
+        {
+          "name": "Delete a session",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/sessions/:session_id", "host": ["{{baseUrl}}"], "path": ["sessions", ":session_id"], "variable": [{ "key": "session_id", "value": "" }] },
+            "description": "Deletes a session."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Speakers",
+      "item": [
+        {
+          "name": "Get all speakers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/speakers?event_id=", "host": ["{{baseUrl}}"], "path": ["speakers"], "query": [{ "key": "event_id", "value": "" }] },
+            "description": "Returns a paginated list of speakers, optionally filtered by event."
+          }
+        },
+        {
+          "name": "Create a speaker",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"event_id\": 0,\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Rivera\",\n  \"email\": \"alex@example.com\"\n}" },
+            "url": { "raw": "{{baseUrl}}/speakers", "host": ["{{baseUrl}}"], "path": ["speakers"] },
+            "description": "Creates a new speaker."
+          }
+        },
+        {
+          "name": "Get one speaker",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/speakers/:speaker_id", "host": ["{{baseUrl}}"], "path": ["speakers", ":speaker_id"], "variable": [{ "key": "speaker_id", "value": "" }] },
+            "description": "Retrieves a single speaker by ID."
+          }
+        },
+        {
+          "name": "Delete a speaker",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/speakers/:speaker_id", "host": ["{{baseUrl}}"], "path": ["speakers", ":speaker_id"], "variable": [{ "key": "speaker_id", "value": "" }] },
+            "description": "Deletes a speaker."
+          }
+        },
+        {
+          "name": "Assign a speaker to a session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/speakers/:speaker_id/sessions/:session_id", "host": ["{{baseUrl}}"], "path": ["speakers", ":speaker_id", "sessions", ":session_id"], "variable": [{ "key": "speaker_id", "value": "" }, { "key": "session_id", "value": "" }] },
+            "description": "Assigns a speaker to a session."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contacts",
+      "item": [
+        {
+          "name": "Get all contacts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/contacts", "host": ["{{baseUrl}}"], "path": ["contacts"] },
+            "description": "Returns a paginated list of organization-level CRM contacts."
+          }
+        },
+        {
+          "name": "Create a contact",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"first_name\": \"Sam\",\n  \"last_name\": \"Lee\",\n  \"email\": \"sam@example.com\"\n}" },
+            "url": { "raw": "{{baseUrl}}/contacts", "host": ["{{baseUrl}}"], "path": ["contacts"] },
+            "description": "Creates a new organization-level contact."
+          }
+        },
+        {
+          "name": "Get one contact",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/contacts/:contact_id", "host": ["{{baseUrl}}"], "path": ["contacts", ":contact_id"], "variable": [{ "key": "contact_id", "value": "" }] },
+            "description": "Retrieves a single contact by ID."
+          }
+        },
+        {
+          "name": "Update a contact",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/contacts/:contact_id", "host": ["{{baseUrl}}"], "path": ["contacts", ":contact_id"], "variable": [{ "key": "contact_id", "value": "" }] },
+            "description": "Updates an existing contact."
+          }
+        },
+        {
+          "name": "Forget a contact (GDPR)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/contacts/:contact_id/forget", "host": ["{{baseUrl}}"], "path": ["contacts", ":contact_id", "forget"], "variable": [{ "key": "contact_id", "value": "" }] },
+            "description": "Anonymizes/forgets a contact to satisfy GDPR erasure requests."
+          }
+        }
+      ]
+    }
+  ]
+}

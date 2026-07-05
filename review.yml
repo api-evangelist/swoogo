@@ -1,0 +1,119 @@
+aid: swoogo
+name: Swoogo
+review:
+  question: Does Swoogo expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-05'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Swoogo's public API surface is a
+    request/response REST API over HTTPS (base https://api.swoogo.com/api/v1)
+    secured with OAuth2 client credentials. There is no documented server-push
+    transport (WebSocket or SSE) on Swoogo's own API to model. Swoogo does offer
+    outbound webhooks (webhook-groups / webhooks resources) that POST event
+    payloads to a subscriber-configured HTTP endpoint, but those are
+    server-to-endpoint HTTP callbacks, not a bidirectional WebSocket the client
+    connects to - and they are already represented in the REST surface.
+findings:
+  summary: |
+    Swoogo does not publish a documented public WebSocket API. Swoogo is an
+    event management and event registration platform. Its public API is a REST
+    API at base https://api.swoogo.com/api/v1, authenticated with an OAuth2
+    client-credentials flow: Base64-encoded key:secret is exchanged at
+    POST /api/v1/oauth2/token for a bearer token that expires every 30 minutes.
+    The API spans roughly 140 endpoints covering events, registrants, sessions,
+    speakers, sponsors, tracks, packages, discount codes, transactions, contacts
+    (CRM), call-for-speakers submissions and reviews, invitation lists, images,
+    and webhooks. All of it is request/response REST over HTTPS. No realtime,
+    bidirectional, or streaming WebSocket (ws:// or wss://) endpoint is
+    documented on Swoogo's API. Swoogo provides outbound webhooks for
+    push-style notifications, but those are HTTP callbacks rather than a
+    WebSocket transport.
+  accessModel: |
+    The API is available to paying Swoogo customers. There is no free tier or
+    free trial; Swoogo sells annual, team-based (per-user) subscriptions with
+    unlimited events and registrations. API credentials are self-issued from
+    within the app under My Profile > API Credentials. The developer portal
+    (developer.swoogo.com) and full reference (swoogo.readme.io) are publicly
+    readable without an account, so endpoints and auth are documented in the
+    open even though live calls require a paid subscription. Endpoints in the
+    accompanying OpenAPI are grounded in that public documentation; the
+    request/response schemas are illustrative and were not exhaustively verified
+    against live responses.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.swoogo.com/api/v1
+      documented: true
+      note: Primary API. OAuth2 client-credentials bearer auth; ~140 endpoints.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Outbound webhooks (webhook-groups / webhooks) POST event payloads to a subscriber HTTP endpoint. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Swoogo's API reference as of the review date.
+  endpointsModeled: true
+  endpointsModeledNote: |
+    Endpoint paths are taken from Swoogo's published reference (the readme.io
+    llms.txt endpoint index and reference pages). The OpenAPI in this repo models
+    a representative subset - Events, Registrants, Sessions, Speakers, and
+    Contacts - with illustrative schemas. Live request/response bodies were not
+    executed (the API requires paid credentials), so field-level schemas should
+    be treated as modeled, not confirmed.
+  endpointsConfirmedRest:
+    - POST   https://api.swoogo.com/api/v1/oauth2/token
+    - GET    https://api.swoogo.com/api/v1/events
+    - POST   https://api.swoogo.com/api/v1/events
+    - GET    https://api.swoogo.com/api/v1/events/{event_id}
+    - PUT    https://api.swoogo.com/api/v1/events/{event_id}
+    - POST   https://api.swoogo.com/api/v1/events/{event_id}/clone
+    - GET    https://api.swoogo.com/api/v1/registrants
+    - POST   https://api.swoogo.com/api/v1/registrants
+    - GET    https://api.swoogo.com/api/v1/registrants/{registrant_id}
+    - PUT    https://api.swoogo.com/api/v1/registrants/{registrant_id}
+    - POST   https://api.swoogo.com/api/v1/registrants/{registrant_id}/check-in
+    - GET    https://api.swoogo.com/api/v1/sessions
+    - POST   https://api.swoogo.com/api/v1/sessions
+    - GET    https://api.swoogo.com/api/v1/sessions/{session_id}
+    - PUT    https://api.swoogo.com/api/v1/sessions/{session_id}
+    - DELETE https://api.swoogo.com/api/v1/sessions/{session_id}
+    - GET    https://api.swoogo.com/api/v1/speakers
+    - POST   https://api.swoogo.com/api/v1/speakers
+    - GET    https://api.swoogo.com/api/v1/speakers/{speaker_id}
+    - DELETE https://api.swoogo.com/api/v1/speakers/{speaker_id}
+    - POST   https://api.swoogo.com/api/v1/speakers/{speaker_id}/sessions/{session_id}
+    - GET    https://api.swoogo.com/api/v1/contacts
+    - POST   https://api.swoogo.com/api/v1/contacts
+    - GET    https://api.swoogo.com/api/v1/contacts/{contact_id}
+    - PUT    https://api.swoogo.com/api/v1/contacts/{contact_id}
+    - POST   https://api.swoogo.com/api/v1/contacts/{contact_id}/forget
+sources:
+  - url: https://developer.swoogo.com/
+    type: DeveloperPortal
+    note: Swoogo developer portal landing page.
+  - url: https://swoogo.readme.io/docs/authentication
+    type: Documentation
+    note: OAuth2 client-credentials flow; base https://api.swoogo.com; 30-minute token expiry. All REST. No WebSocket.
+  - url: https://swoogo.readme.io/reference/post_oauth2-token
+    type: APIReference
+    note: POST /api/v1/oauth2/token token exchange.
+  - url: https://swoogo.readme.io/llms.txt
+    type: MachineReadable
+    note: Markdown/OpenAPI index of all reference pages; ~140 endpoints across events, registrants, sessions, speakers, contacts, sponsors, CFS, webhooks, etc.
+  - url: https://swoogo.readme.io/docs/api-rate-limits
+    type: Documentation
+    note: Credit-based rate limit - 2000 credits per 10 minutes; 10 credits per list, 1 per single record.
+  - url: https://swoogo.events/pricing/
+    type: Pricing
+    note: Team-based annual subscription; unlimited events and registrations; no free trial.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists on Swoogo's API. Swoogo's public API is
+    request/response REST (OAuth2 client-credentials), with outbound HTTP
+    webhooks for push notifications. No AsyncAPI document was created because
+    there is no client-facing server-push transport (WebSocket or SSE) to model.

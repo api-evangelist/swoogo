@@ -1,0 +1,168 @@
+aid: swoogo
+url: https://raw.githubusercontent.com/api-evangelist/swoogo/refs/heads/main/apis.yml
+name: Swoogo
+kind: company
+description: Swoogo is an event management and event registration platform for building
+  event websites, registration forms, agendas, and badges across in-person, virtual,
+  and hybrid events. Swoogo exposes a documented public REST API at
+  https://api.swoogo.com/api/v1 secured with OAuth2 client-credentials (bearer tokens
+  that expire every 30 minutes). The API covers events, registrants, sessions,
+  speakers, sponsors, tracks, packages, discount codes, transactions, contacts
+  (CRM), call-for-speakers submissions, invitation lists, and webhooks - roughly
+  140 endpoints. Access requires a paid Swoogo subscription; API credentials are
+  issued from My Profile > API Credentials in the Swoogo app.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Event Management
+- Event Registration
+- Events
+- Sessions
+- Speakers
+- Attendees
+- SaaS
+created: '2026-07-05'
+modified: '2026-07-05'
+specificationVersion: '0.19'
+apis:
+- aid: swoogo:swoogo-events-api
+  name: Swoogo Events API
+  tags:
+  - Events
+  - Event Management
+  - Fields
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://swoogo.readme.io/reference/get_events
+  baseURL: https://api.swoogo.com/api/v1
+  properties:
+  - url: https://swoogo.readme.io/docs
+    type: Documentation
+  - url: https://swoogo.readme.io/reference/get_events
+    type: APIReference
+  - url: openapi/swoogo-openapi.yml
+    type: OpenAPI
+  - url: collections/swoogo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/swoogo.opencollection.json
+    type: OpenCollection
+  description: Create, list, retrieve, update, and clone events, and manage their
+    custom fields, questions, folders, websites, and badges. The event is the top
+    level container in Swoogo under which registrants, sessions, speakers, and pages
+    are organized.
+- aid: swoogo:swoogo-registrants-api
+  name: Swoogo Registrants API
+  tags:
+  - Registrants
+  - Registration
+  - Attendees
+  - Check-In
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://swoogo.readme.io/reference/get_registrants
+  baseURL: https://api.swoogo.com/api/v1
+  properties:
+  - url: https://swoogo.readme.io/docs
+    type: Documentation
+  - url: https://swoogo.readme.io/reference/get_registrants
+    type: APIReference
+  - url: openapi/swoogo-openapi.yml
+    type: OpenAPI
+  - url: collections/swoogo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/swoogo.opencollection.json
+    type: OpenCollection
+  description: Create, list, retrieve, and update registrants (attendees), check them
+    in, email them, mint registrant tokens, add or remove them from groups, and
+    register them for or waitlist them on sessions. Registrant types define the
+    ticket/category structure.
+- aid: swoogo:swoogo-sessions-api
+  name: Swoogo Sessions API
+  tags:
+  - Sessions
+  - Agenda
+  - Tracks
+  - Attendance
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://swoogo.readme.io/reference/get_sessions
+  baseURL: https://api.swoogo.com/api/v1
+  properties:
+  - url: https://swoogo.readme.io/docs
+    type: Documentation
+  - url: https://swoogo.readme.io/reference/get_sessions
+    type: APIReference
+  - url: openapi/swoogo-openapi.yml
+    type: OpenAPI
+  - url: collections/swoogo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/swoogo.opencollection.json
+    type: OpenCollection
+  description: Create, list, retrieve, update, and delete agenda sessions, plus manage
+    session custom fields, locations, fees, attendance records, and QR/badge scans.
+    Sessions can be grouped into tracks and priced individually.
+- aid: swoogo:swoogo-speakers-api
+  name: Swoogo Speakers API
+  tags:
+  - Speakers
+  - Sessions
+  - Call For Speakers
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://swoogo.readme.io/reference/get_speakers
+  baseURL: https://api.swoogo.com/api/v1
+  properties:
+  - url: https://swoogo.readme.io/docs
+    type: Documentation
+  - url: https://swoogo.readme.io/reference/get_speakers
+    type: APIReference
+  - url: openapi/swoogo-openapi.yml
+    type: OpenAPI
+  - url: collections/swoogo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/swoogo.opencollection.json
+    type: OpenCollection
+  description: Create, list, retrieve, and delete speakers and assign them to sessions.
+    Complements the Call for Speakers (CFS) surface, where submissions and reviews
+    feed the speaker roster for an event.
+- aid: swoogo:swoogo-contacts-api
+  name: Swoogo Contacts API
+  tags:
+  - Contacts
+  - CRM
+  - Invitation Lists
+  - GDPR
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://swoogo.readme.io/reference/get_contacts
+  baseURL: https://api.swoogo.com/api/v1
+  properties:
+  - url: https://swoogo.readme.io/docs
+    type: Documentation
+  - url: https://swoogo.readme.io/reference/get_contacts
+    type: APIReference
+  - url: openapi/swoogo-openapi.yml
+    type: OpenAPI
+  - url: collections/swoogo.postman_collection.json
+    type: PostmanCollection
+  - url: collections/swoogo.opencollection.json
+    type: OpenCollection
+  description: Manage the organization-level contacts (CRM) that persist across events -
+    create, list, retrieve, and update contacts, read contact fields, forget a contact
+    for GDPR, and build invitation lists that target contacts for specific events.
+common:
+- type: LinkedIn
+  url: https://www.linkedin.com/company/swoogo
+- type: Website
+  url: https://swoogo.events
+- type: DeveloperPortal
+  url: https://developer.swoogo.com
+- type: Documentation
+  url: https://swoogo.readme.io/docs
+- type: Authentication
+  url: https://swoogo.readme.io/docs/authentication
+- type: SignUp
+  url: https://swoogo.events/pricing
+- type: Plans
+  url: plans/swoogo-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/swoogo-rate-limits.yml
+- type: FinOps
+  url: finops/swoogo-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

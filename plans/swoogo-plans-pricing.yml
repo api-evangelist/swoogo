@@ -1,0 +1,109 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Swoogo
+providerId: swoogo
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Event Management
+- Event Registration
+- SaaS
+- Plans
+description: >-
+  Swoogo uses a team-based (per-user) subscription model rather than per-event or
+  per-registrant pricing - every plan includes unlimited events and unlimited
+  registrations, and you pay based on the size of your team. Swoogo does not offer
+  a free plan or a free trial; all plans are paid annual contracts. Published
+  third-party estimates put the entry Professional plan around $11,800/year and
+  higher tiers up to roughly $26,000/year, with Enterprise at custom pricing.
+  The API is included with a paid subscription at no separate metered fee -
+  API credentials are issued in the app under My Profile > API Credentials -
+  though API usage is throttled by a credit-based rate limit. Exact list prices
+  are set by sales and are not reconciled here.
+notes: >-
+  Swoogo does not publish an itemized public price list; the figures below are
+  from third-party pricing aggregators (G2, Vendr, Software Finder) and should be
+  confirmed with Swoogo sales during reconciliation. Pricing is annual and
+  team-size based.
+sources:
+- https://swoogo.events/pricing/
+- https://www.g2.com/products/swoogo/pricing
+- https://www.vendr.com/marketplace/swoogo
+- https://swoogo.readme.io/docs/authentication
+plans:
+- id: swoogo-professional
+  name: Professional
+  type: paid
+  description: >-
+    Entry paid tier for smaller event teams. Includes unlimited events and
+    unlimited registrations, event website and registration builder, sessions
+    and agenda, speakers, badges, and full REST API access. Priced per team size
+    on an annual contract (third-party estimates around $11,800/year).
+  entries:
+  - label: Annual Subscription
+    name: professional_annual
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: from ~$11,800/year (team-based; contact sales)
+    userMultiplied: true
+  elements:
+  - name: Unlimited Events
+  - name: Unlimited Registrations
+  - name: REST API Access
+  - name: Sessions and Agenda
+  - name: Speakers
+  - name: Badges and Check-In
+- id: swoogo-growth
+  name: Growth / Higher Tiers
+  type: paid
+  description: >-
+    Mid/upper paid tiers for larger teams and more advanced needs, adding more
+    users and advanced features. Third-party estimates range up to roughly
+    $26,000/year depending on team size and add-ons.
+  entries:
+  - label: Annual Subscription
+    name: growth_annual
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: up to ~$26,000/year (team-based; contact sales)
+    userMultiplied: true
+  elements:
+  - name: Larger Team Seats
+  - name: Unlimited Events
+  - name: REST API Access
+  - name: Advanced Features
+- id: swoogo-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Custom enterprise plan for the largest teams and organizations - negotiated
+    pricing, SSO, security review, dedicated support, and SLAs. Contact Swoogo.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Team Size
+  - name: SSO and Security Review
+  - name: Dedicated Support and SLAs
+  - name: REST API Access
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

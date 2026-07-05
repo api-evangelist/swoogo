@@ -1,0 +1,258 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Swoogo API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Authentication", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Request an API token.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/oauth2/token",
+            "body": { "type": "urlencoded", "data": "grant_type=client_credentials" }
+          },
+          "docs": "Exchanges Base64-encoded client credentials for a bearer token that expires in 30 minutes."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Events", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get all events.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.swoogo.com/api/v1/events" },
+          "docs": "Returns a paginated list of events."
+        },
+        {
+          "info": { "name": "Create an event.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.swoogo.com/api/v1/events", "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a new event."
+        },
+        {
+          "info": { "name": "Get one event.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/events/:event_id",
+            "params": [ { "name": "event_id", "value": "", "type": "path", "description": "The event ID." } ]
+          },
+          "docs": "Retrieves a single event by ID."
+        },
+        {
+          "info": { "name": "Update an event.", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.swoogo.com/api/v1/events/:event_id",
+            "params": [ { "name": "event_id", "value": "", "type": "path", "description": "The event ID." } ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Updates an existing event."
+        },
+        {
+          "info": { "name": "Clone an event.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/events/:event_id/clone",
+            "params": [ { "name": "event_id", "value": "", "type": "path", "description": "The event ID." } ]
+          },
+          "docs": "Creates a copy of an existing event."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Registrants", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get all registrants.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/registrants",
+            "params": [ { "name": "event_id", "value": "", "type": "query", "description": "Filter registrants by event." } ]
+          },
+          "docs": "Returns a paginated list of registrants, optionally filtered by event."
+        },
+        {
+          "info": { "name": "Create a registrant.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.swoogo.com/api/v1/registrants", "body": { "type": "json", "data": "{}" } },
+          "docs": "Registers a new attendee for an event."
+        },
+        {
+          "info": { "name": "Get one registrant.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/registrants/:registrant_id",
+            "params": [ { "name": "registrant_id", "value": "", "type": "path", "description": "The registrant ID." } ]
+          },
+          "docs": "Retrieves a single registrant by ID."
+        },
+        {
+          "info": { "name": "Update a registrant.", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.swoogo.com/api/v1/registrants/:registrant_id",
+            "params": [ { "name": "registrant_id", "value": "", "type": "path", "description": "The registrant ID." } ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Updates an existing registrant."
+        },
+        {
+          "info": { "name": "Check a registrant in.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/registrants/:registrant_id/check-in",
+            "params": [ { "name": "registrant_id", "value": "", "type": "path", "description": "The registrant ID." } ]
+          },
+          "docs": "Marks a registrant as checked in to the event."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Sessions", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get all sessions.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/sessions",
+            "params": [ { "name": "event_id", "value": "", "type": "query", "description": "Filter sessions by event." } ]
+          },
+          "docs": "Returns a paginated list of agenda sessions, optionally filtered by event."
+        },
+        {
+          "info": { "name": "Create a session.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.swoogo.com/api/v1/sessions", "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a new agenda session."
+        },
+        {
+          "info": { "name": "Get one session.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/sessions/:session_id",
+            "params": [ { "name": "session_id", "value": "", "type": "path", "description": "The session ID." } ]
+          },
+          "docs": "Retrieves a single session by ID."
+        },
+        {
+          "info": { "name": "Update a session.", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.swoogo.com/api/v1/sessions/:session_id",
+            "params": [ { "name": "session_id", "value": "", "type": "path", "description": "The session ID." } ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Updates an existing session."
+        },
+        {
+          "info": { "name": "Delete a session.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.swoogo.com/api/v1/sessions/:session_id",
+            "params": [ { "name": "session_id", "value": "", "type": "path", "description": "The session ID." } ]
+          },
+          "docs": "Deletes a session."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Speakers", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get all speakers.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/speakers",
+            "params": [ { "name": "event_id", "value": "", "type": "query", "description": "Filter speakers by event." } ]
+          },
+          "docs": "Returns a paginated list of speakers, optionally filtered by event."
+        },
+        {
+          "info": { "name": "Create a speaker.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.swoogo.com/api/v1/speakers", "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a new speaker."
+        },
+        {
+          "info": { "name": "Get one speaker.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/speakers/:speaker_id",
+            "params": [ { "name": "speaker_id", "value": "", "type": "path", "description": "The speaker ID." } ]
+          },
+          "docs": "Retrieves a single speaker by ID."
+        },
+        {
+          "info": { "name": "Delete a speaker.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.swoogo.com/api/v1/speakers/:speaker_id",
+            "params": [ { "name": "speaker_id", "value": "", "type": "path", "description": "The speaker ID." } ]
+          },
+          "docs": "Deletes a speaker."
+        },
+        {
+          "info": { "name": "Assign a speaker to a session.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/speakers/:speaker_id/sessions/:session_id",
+            "params": [
+              { "name": "speaker_id", "value": "", "type": "path", "description": "The speaker ID." },
+              { "name": "session_id", "value": "", "type": "path", "description": "The session ID." }
+            ]
+          },
+          "docs": "Assigns a speaker to a session."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Contacts", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get all contacts.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.swoogo.com/api/v1/contacts" },
+          "docs": "Returns a paginated list of organization-level CRM contacts."
+        },
+        {
+          "info": { "name": "Create a contact.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.swoogo.com/api/v1/contacts", "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a new organization-level contact."
+        },
+        {
+          "info": { "name": "Get one contact.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/contacts/:contact_id",
+            "params": [ { "name": "contact_id", "value": "", "type": "path", "description": "The contact ID." } ]
+          },
+          "docs": "Retrieves a single contact by ID."
+        },
+        {
+          "info": { "name": "Update a contact.", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.swoogo.com/api/v1/contacts/:contact_id",
+            "params": [ { "name": "contact_id", "value": "", "type": "path", "description": "The contact ID." } ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Updates an existing contact."
+        },
+        {
+          "info": { "name": "Forget a contact (GDPR).", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/contacts/:contact_id/forget",
+            "params": [ { "name": "contact_id", "value": "", "type": "path", "description": "The contact ID." } ]
+          },
+          "docs": "Anonymizes/forgets a contact to satisfy GDPR erasure requests."
+        }
+      ]
+    }
+  ]
+}
