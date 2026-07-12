@@ -1,0 +1,14 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/swoogo-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: Bearer token obtained from POST /oauth2/token using the OAuth2 client_credentials
+    grant. Tokens expire every 30 minutes.
+  sources:
+  - openapi/swoogo-openapi.yml

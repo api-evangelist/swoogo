@@ -145,6 +145,14 @@ apis:
     create, list, retrieve, and update contacts, read contact fields, forget a contact
     for GDPR, and build invitation lists that target contacts for specific events.
 common:
+- type: TrustCenter
+  url: security/swoogo-trust-center.yml
+- type: VulnerabilityDisclosure
+  url: security/swoogo-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/swoogo-domain-security.yml
+- type: Authentication
+  url: authentication/swoogo-authentication.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/swoogo
 - type: Website
