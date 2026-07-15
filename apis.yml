@@ -145,6 +145,8 @@ apis:
     create, list, retrieve, and update contacts, read contact fields, forget a contact
     for GDPR, and build invitation lists that target contacts for specific events.
 common:
+- type: AgenticAccess
+  url: agentic-access/swoogo-agentic-access.yml
 - type: TrustCenter
   url: security/swoogo-trust-center.yml
 - type: VulnerabilityDisclosure
