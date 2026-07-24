@@ -1,0 +1,179 @@
+openapi: 3.0.3
+info:
+  title: Swoogo Authentication Sessions API
+  description: 'The Swoogo API is a REST API for the Swoogo event management and event registration platform. It lets you programmatically manage events, registrants, sessions, speakers, sponsors, tracks, packages, discount codes, transactions, organization-level contacts (CRM), call-for-speakers submissions, invitation lists, and webhooks. The base URL is https://api.swoogo.com/api/v1. Authentication uses OAuth2 client credentials: Base64-encode your API key and secret (found in the Swoogo app under My Profile > API Credentials), exchange them at POST /oauth2/token for a bearer token, then send that token as an Authorization: Bearer header. Bearer tokens expire every 30 minutes. This document models a representative subset of the roughly 140 documented endpoints; the full reference is at https://swoogo.readme.io/reference. Endpoint paths are grounded in the published Swoogo API documentation; request/response schemas below are illustrative and should be verified against the live reference.'
+  version: '1.0'
+  contact:
+    name: Swoogo
+    url: https://developer.swoogo.com
+  termsOfService: https://swoogo.events
+servers:
+- url: https://api.swoogo.com/api/v1
+  description: Swoogo production API
+security:
+- bearerAuth: []
+tags:
+- name: Sessions
+  description: Agenda sessions, locations, fees, attendance, and scans.
+paths:
+  /sessions:
+    get:
+      operationId: listSessions
+      tags:
+      - Sessions
+      summary: Get all sessions
+      description: Returns a paginated list of agenda sessions, optionally filtered by event.
+      parameters:
+      - name: event_id
+        in: query
+        schema:
+          type: integer
+        description: Filter sessions by event.
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A list of sessions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createSession
+      tags:
+      - Sessions
+      summary: Create a session
+      description: Creates a new agenda session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session'
+      responses:
+        '201':
+          description: The created session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /sessions/{session_id}:
+    parameters:
+    - $ref: '#/components/parameters/SessionId'
+    get:
+      operationId: getSession
+      tags:
+      - Sessions
+      summary: Get one session
+      description: Retrieves a single session by ID.
+      responses:
+        '200':
+          description: The requested session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateSession
+      tags:
+      - Sessions
+      summary: Update a session
+      description: Updates an existing session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session'
+      responses:
+        '200':
+          description: The updated session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      operationId: deleteSession
+      tags:
+      - Sessions
+      summary: Delete a session
+      description: Deletes a session.
+      responses:
+        '204':
+          description: The session was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    PageSize:
+      name: per-page
+      in: query
+      schema:
+        type: integer
+      description: The number of records per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number for paginated results.
+    SessionId:
+      name: session_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The session ID.
+  schemas:
+    Session:
+      type: object
+      properties:
+        id:
+          type: integer
+        event_id:
+          type: integer
+        name:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        track_id:
+          type: integer
+        location_id:
+          type: integer
+    SessionList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        total_count:
+          type: integer
+  responses:
+    RateLimited:
+      description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: The bearer token is missing, invalid, or expired.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer token obtained from POST /oauth2/token using the OAuth2 client_credentials grant. Tokens expire every 30 minutes.

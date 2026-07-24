@@ -1,0 +1,184 @@
+openapi: 3.0.3
+info:
+  title: Swoogo Authentication Registrants API
+  description: 'The Swoogo API is a REST API for the Swoogo event management and event registration platform. It lets you programmatically manage events, registrants, sessions, speakers, sponsors, tracks, packages, discount codes, transactions, organization-level contacts (CRM), call-for-speakers submissions, invitation lists, and webhooks. The base URL is https://api.swoogo.com/api/v1. Authentication uses OAuth2 client credentials: Base64-encode your API key and secret (found in the Swoogo app under My Profile > API Credentials), exchange them at POST /oauth2/token for a bearer token, then send that token as an Authorization: Bearer header. Bearer tokens expire every 30 minutes. This document models a representative subset of the roughly 140 documented endpoints; the full reference is at https://swoogo.readme.io/reference. Endpoint paths are grounded in the published Swoogo API documentation; request/response schemas below are illustrative and should be verified against the live reference.'
+  version: '1.0'
+  contact:
+    name: Swoogo
+    url: https://developer.swoogo.com
+  termsOfService: https://swoogo.events
+servers:
+- url: https://api.swoogo.com/api/v1
+  description: Swoogo production API
+security:
+- bearerAuth: []
+tags:
+- name: Registrants
+  description: Attendees, check-in, groups, session registration, and types.
+paths:
+  /registrants:
+    get:
+      operationId: listRegistrants
+      tags:
+      - Registrants
+      summary: Get all registrants
+      description: Returns a paginated list of registrants, optionally filtered by event.
+      parameters:
+      - name: event_id
+        in: query
+        schema:
+          type: integer
+        description: Filter registrants by event.
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A list of registrants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrantList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createRegistrant
+      tags:
+      - Registrants
+      summary: Create a registrant
+      description: Registers a new attendee for an event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registrant'
+      responses:
+        '201':
+          description: The created registrant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registrant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /registrants/{registrant_id}:
+    parameters:
+    - $ref: '#/components/parameters/RegistrantId'
+    get:
+      operationId: getRegistrant
+      tags:
+      - Registrants
+      summary: Get one registrant
+      description: Retrieves a single registrant by ID.
+      responses:
+        '200':
+          description: The requested registrant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registrant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateRegistrant
+      tags:
+      - Registrants
+      summary: Update a registrant
+      description: Updates an existing registrant.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registrant'
+      responses:
+        '200':
+          description: The updated registrant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registrant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /registrants/{registrant_id}/check-in:
+    parameters:
+    - $ref: '#/components/parameters/RegistrantId'
+    post:
+      operationId: checkInRegistrant
+      tags:
+      - Registrants
+      summary: Check a registrant in
+      description: Marks a registrant as checked in to the event.
+      responses:
+        '200':
+          description: The updated registrant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registrant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    PageSize:
+      name: per-page
+      in: query
+      schema:
+        type: integer
+      description: The number of records per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number for paginated results.
+    RegistrantId:
+      name: registrant_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The registrant ID.
+  responses:
+    RateLimited:
+      description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: The bearer token is missing, invalid, or expired.
+  schemas:
+    Registrant:
+      type: object
+      properties:
+        id:
+          type: integer
+        event_id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        registrant_type_id:
+          type: integer
+        checked_in:
+          type: boolean
+    RegistrantList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Registrant'
+        total_count:
+          type: integer
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer token obtained from POST /oauth2/token using the OAuth2 client_credentials grant. Tokens expire every 30 minutes.

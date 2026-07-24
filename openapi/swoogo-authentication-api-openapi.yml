@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Swoogo Authentication API
+  description: 'The Swoogo API is a REST API for the Swoogo event management and event registration platform. It lets you programmatically manage events, registrants, sessions, speakers, sponsors, tracks, packages, discount codes, transactions, organization-level contacts (CRM), call-for-speakers submissions, invitation lists, and webhooks. The base URL is https://api.swoogo.com/api/v1. Authentication uses OAuth2 client credentials: Base64-encode your API key and secret (found in the Swoogo app under My Profile > API Credentials), exchange them at POST /oauth2/token for a bearer token, then send that token as an Authorization: Bearer header. Bearer tokens expire every 30 minutes. This document models a representative subset of the roughly 140 documented endpoints; the full reference is at https://swoogo.readme.io/reference. Endpoint paths are grounded in the published Swoogo API documentation; request/response schemas below are illustrative and should be verified against the live reference.'
+  version: '1.0'
+  contact:
+    name: Swoogo
+    url: https://developer.swoogo.com
+  termsOfService: https://swoogo.events
+servers:
+- url: https://api.swoogo.com/api/v1
+  description: Swoogo production API
+security:
+- bearerAuth: []
+tags:
+- name: Authentication
+  description: OAuth2 client-credentials token exchange.
+paths:
+  /oauth2/token:
+    post:
+      operationId: createToken
+      tags:
+      - Authentication
+      summary: Request an API token
+      description: Exchanges Base64-encoded client credentials for a bearer token using the OAuth2 client_credentials grant. Send the encoded key:secret in an Authorization Basic header and grant_type=client_credentials as a form-encoded body. The returned token expires after 30 minutes.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - grant_type
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - client_credentials
+      responses:
+        '200':
+          description: A bearer token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type:
+                    type: string
+                    example: Bearer
+                  access_token:
+                    type: string
+                  expires_at:
+                    type: string
+                    description: UTC timestamp at which the token expires.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: The bearer token is missing, invalid, or expired.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer token obtained from POST /oauth2/token using the OAuth2 client_credentials grant. Tokens expire every 30 minutes.

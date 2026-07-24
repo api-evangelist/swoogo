@@ -1,0 +1,189 @@
+openapi: 3.0.3
+info:
+  title: Swoogo Authentication Speakers API
+  description: 'The Swoogo API is a REST API for the Swoogo event management and event registration platform. It lets you programmatically manage events, registrants, sessions, speakers, sponsors, tracks, packages, discount codes, transactions, organization-level contacts (CRM), call-for-speakers submissions, invitation lists, and webhooks. The base URL is https://api.swoogo.com/api/v1. Authentication uses OAuth2 client credentials: Base64-encode your API key and secret (found in the Swoogo app under My Profile > API Credentials), exchange them at POST /oauth2/token for a bearer token, then send that token as an Authorization: Bearer header. Bearer tokens expire every 30 minutes. This document models a representative subset of the roughly 140 documented endpoints; the full reference is at https://swoogo.readme.io/reference. Endpoint paths are grounded in the published Swoogo API documentation; request/response schemas below are illustrative and should be verified against the live reference.'
+  version: '1.0'
+  contact:
+    name: Swoogo
+    url: https://developer.swoogo.com
+  termsOfService: https://swoogo.events
+servers:
+- url: https://api.swoogo.com/api/v1
+  description: Swoogo production API
+security:
+- bearerAuth: []
+tags:
+- name: Speakers
+  description: Speakers and their session assignments.
+paths:
+  /speakers:
+    get:
+      operationId: listSpeakers
+      tags:
+      - Speakers
+      summary: Get all speakers
+      description: Returns a paginated list of speakers, optionally filtered by event.
+      parameters:
+      - name: event_id
+        in: query
+        schema:
+          type: integer
+        description: Filter speakers by event.
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A list of speakers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeakerList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createSpeaker
+      tags:
+      - Speakers
+      summary: Create a speaker
+      description: Creates a new speaker.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Speaker'
+      responses:
+        '201':
+          description: The created speaker.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Speaker'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /speakers/{speaker_id}:
+    parameters:
+    - $ref: '#/components/parameters/SpeakerId'
+    get:
+      operationId: getSpeaker
+      tags:
+      - Speakers
+      summary: Get one speaker
+      description: Retrieves a single speaker by ID.
+      responses:
+        '200':
+          description: The requested speaker.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Speaker'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteSpeaker
+      tags:
+      - Speakers
+      summary: Delete a speaker
+      description: Deletes a speaker.
+      responses:
+        '204':
+          description: The speaker was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /speakers/{speaker_id}/sessions/{session_id}:
+    parameters:
+    - $ref: '#/components/parameters/SpeakerId'
+    - $ref: '#/components/parameters/SessionId'
+    post:
+      operationId: assignSpeakerSession
+      tags:
+      - Speakers
+      summary: Assign a speaker to a session
+      description: Assigns a speaker to a session.
+      responses:
+        '201':
+          description: The assignment was created.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      operationId: removeSpeakerSession
+      tags:
+      - Speakers
+      summary: Remove a speaker from a session
+      description: Removes a speaker's assignment from a session.
+      responses:
+        '204':
+          description: The assignment was removed.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    SpeakerId:
+      name: speaker_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The speaker ID.
+    PageSize:
+      name: per-page
+      in: query
+      schema:
+        type: integer
+      description: The number of records per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number for paginated results.
+    SessionId:
+      name: session_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The session ID.
+  responses:
+    RateLimited:
+      description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: The bearer token is missing, invalid, or expired.
+  schemas:
+    SpeakerList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Speaker'
+        total_count:
+          type: integer
+    Speaker:
+      type: object
+      properties:
+        id:
+          type: integer
+        event_id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        company:
+          type: string
+        job_title:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer token obtained from POST /oauth2/token using the OAuth2 client_credentials grant. Tokens expire every 30 minutes.

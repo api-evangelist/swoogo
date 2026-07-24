@@ -1,0 +1,171 @@
+openapi: 3.0.3
+info:
+  title: Swoogo Authentication Contacts API
+  description: 'The Swoogo API is a REST API for the Swoogo event management and event registration platform. It lets you programmatically manage events, registrants, sessions, speakers, sponsors, tracks, packages, discount codes, transactions, organization-level contacts (CRM), call-for-speakers submissions, invitation lists, and webhooks. The base URL is https://api.swoogo.com/api/v1. Authentication uses OAuth2 client credentials: Base64-encode your API key and secret (found in the Swoogo app under My Profile > API Credentials), exchange them at POST /oauth2/token for a bearer token, then send that token as an Authorization: Bearer header. Bearer tokens expire every 30 minutes. This document models a representative subset of the roughly 140 documented endpoints; the full reference is at https://swoogo.readme.io/reference. Endpoint paths are grounded in the published Swoogo API documentation; request/response schemas below are illustrative and should be verified against the live reference.'
+  version: '1.0'
+  contact:
+    name: Swoogo
+    url: https://developer.swoogo.com
+  termsOfService: https://swoogo.events
+servers:
+- url: https://api.swoogo.com/api/v1
+  description: Swoogo production API
+security:
+- bearerAuth: []
+tags:
+- name: Contacts
+  description: Organization-level CRM contacts and contact fields.
+paths:
+  /contacts:
+    get:
+      operationId: listContacts
+      tags:
+      - Contacts
+      summary: Get all contacts
+      description: Returns a paginated list of organization-level CRM contacts.
+      parameters:
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A list of contacts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createContact
+      tags:
+      - Contacts
+      summary: Create a contact
+      description: Creates a new organization-level contact.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '201':
+          description: The created contact.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /contacts/{contact_id}:
+    parameters:
+    - $ref: '#/components/parameters/ContactId'
+    get:
+      operationId: getContact
+      tags:
+      - Contacts
+      summary: Get one contact
+      description: Retrieves a single contact by ID.
+      responses:
+        '200':
+          description: The requested contact.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateContact
+      tags:
+      - Contacts
+      summary: Update a contact
+      description: Updates an existing contact.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '200':
+          description: The updated contact.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /contacts/{contact_id}/forget:
+    parameters:
+    - $ref: '#/components/parameters/ContactId'
+    post:
+      operationId: forgetContact
+      tags:
+      - Contacts
+      summary: Forget a contact (GDPR)
+      description: Anonymizes/forgets a contact to satisfy GDPR erasure requests.
+      responses:
+        '200':
+          description: The contact was forgotten.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    PageSize:
+      name: per-page
+      in: query
+      schema:
+        type: integer
+      description: The number of records per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number for paginated results.
+    ContactId:
+      name: contact_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The contact ID.
+  responses:
+    RateLimited:
+      description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: The bearer token is missing, invalid, or expired.
+  schemas:
+    ContactList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+        total_count:
+          type: integer
+    Contact:
+      type: object
+      properties:
+        id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        company:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer token obtained from POST /oauth2/token using the OAuth2 client_credentials grant. Tokens expire every 30 minutes.
