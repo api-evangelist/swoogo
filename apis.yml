@@ -11,7 +11,20 @@ description: Swoogo is an event management and event registration platform for b
   (CRM), call-for-speakers submissions, invitation lists, and webhooks - roughly
   140 endpoints. Access requires a paid Swoogo subscription; API credentials are
   issued from My Profile > API Credentials in the Swoogo app.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: paid
+  onboarding: self-serve
+  trial: true
+  try_now: true
+  public: false
+  label: Paid (free trial) · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/swoogo.png
 tags:
 - Event Management
 - Event Registration
@@ -24,126 +37,162 @@ created: '2026-07-05'
 modified: '2026-07-05'
 specificationVersion: '0.19'
 apis:
-- aid: swoogo:swoogo-events-api
-  name: Swoogo Events API
-  tags:
-  - Events
-  - Event Management
-  - Fields
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: swoogo:swoogo-authentication-api
+  name: Swoogo Authentication API
+  description: OAuth2 client-credentials token exchange.
   humanURL: https://swoogo.readme.io/reference/get_events
   baseURL: https://api.swoogo.com/api/v1
-  properties:
-  - url: https://swoogo.readme.io/docs
-    type: Documentation
-  - url: https://swoogo.readme.io/reference/get_events
-    type: APIReference
-  - url: openapi/swoogo-openapi.yml
-    type: OpenAPI
-  - url: collections/swoogo.postman_collection.json
-    type: PostmanCollection
-  - url: collections/swoogo.opencollection.json
-    type: OpenCollection
-  description: Create, list, retrieve, update, and clone events, and manage their
-    custom fields, questions, folders, websites, and badges. The event is the top
-    level container in Swoogo under which registrants, sessions, speakers, and pages
-    are organized.
-- aid: swoogo:swoogo-registrants-api
-  name: Swoogo Registrants API
   tags:
-  - Registrants
-  - Registration
-  - Attendees
-  - Check-In
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://swoogo.readme.io/reference/get_registrants
-  baseURL: https://api.swoogo.com/api/v1
+  - Authentication
   properties:
-  - url: https://swoogo.readme.io/docs
-    type: Documentation
-  - url: https://swoogo.readme.io/reference/get_registrants
-    type: APIReference
-  - url: openapi/swoogo-openapi.yml
-    type: OpenAPI
-  - url: collections/swoogo.postman_collection.json
-    type: PostmanCollection
-  - url: collections/swoogo.opencollection.json
-    type: OpenCollection
-  description: Create, list, retrieve, and update registrants (attendees), check them
-    in, email them, mint registrant tokens, add or remove them from groups, and
-    register them for or waitlist them on sessions. Registrant types define the
-    ticket/category structure.
-- aid: swoogo:swoogo-sessions-api
-  name: Swoogo Sessions API
-  tags:
-  - Sessions
-  - Agenda
-  - Tracks
-  - Attendance
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://swoogo.readme.io/reference/get_sessions
-  baseURL: https://api.swoogo.com/api/v1
-  properties:
-  - url: https://swoogo.readme.io/docs
-    type: Documentation
-  - url: https://swoogo.readme.io/reference/get_sessions
-    type: APIReference
-  - url: openapi/swoogo-openapi.yml
-    type: OpenAPI
-  - url: collections/swoogo.postman_collection.json
-    type: PostmanCollection
-  - url: collections/swoogo.opencollection.json
-    type: OpenCollection
-  description: Create, list, retrieve, update, and delete agenda sessions, plus manage
-    session custom fields, locations, fees, attendance records, and QR/badge scans.
-    Sessions can be grouped into tracks and priced individually.
-- aid: swoogo:swoogo-speakers-api
-  name: Swoogo Speakers API
-  tags:
-  - Speakers
-  - Sessions
-  - Call For Speakers
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://swoogo.readme.io/reference/get_speakers
-  baseURL: https://api.swoogo.com/api/v1
-  properties:
-  - url: https://swoogo.readme.io/docs
-    type: Documentation
-  - url: https://swoogo.readme.io/reference/get_speakers
-    type: APIReference
-  - url: openapi/swoogo-openapi.yml
-    type: OpenAPI
-  - url: collections/swoogo.postman_collection.json
-    type: PostmanCollection
-  - url: collections/swoogo.opencollection.json
-    type: OpenCollection
-  description: Create, list, retrieve, and delete speakers and assign them to sessions.
-    Complements the Call for Speakers (CFS) surface, where submissions and reviews
-    feed the speaker roster for an event.
+  - type: OpenAPI
+    url: openapi/swoogo-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://swoogo.readme.io/docs
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_events
+  - type: PostmanCollection
+    url: collections/swoogo.postman_collection.json
+  - type: OpenCollection
+    url: collections/swoogo.opencollection.json
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_registrants
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_sessions
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_speakers
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_contacts
 - aid: swoogo:swoogo-contacts-api
   name: Swoogo Contacts API
+  description: Organization-level CRM contacts and contact fields.
+  humanURL: https://swoogo.readme.io/reference/get_events
+  baseURL: https://api.swoogo.com/api/v1
   tags:
   - Contacts
-  - CRM
-  - Invitation Lists
-  - GDPR
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://swoogo.readme.io/reference/get_contacts
-  baseURL: https://api.swoogo.com/api/v1
   properties:
-  - url: https://swoogo.readme.io/docs
-    type: Documentation
-  - url: https://swoogo.readme.io/reference/get_contacts
-    type: APIReference
-  - url: openapi/swoogo-openapi.yml
-    type: OpenAPI
-  - url: collections/swoogo.postman_collection.json
-    type: PostmanCollection
-  - url: collections/swoogo.opencollection.json
-    type: OpenCollection
-  description: Manage the organization-level contacts (CRM) that persist across events -
-    create, list, retrieve, and update contacts, read contact fields, forget a contact
-    for GDPR, and build invitation lists that target contacts for specific events.
+  - type: OpenAPI
+    url: openapi/swoogo-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://swoogo.readme.io/docs
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_events
+  - type: PostmanCollection
+    url: collections/swoogo.postman_collection.json
+  - type: OpenCollection
+    url: collections/swoogo.opencollection.json
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_registrants
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_sessions
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_speakers
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_contacts
+- aid: swoogo:swoogo-events-api
+  name: Swoogo Events API
+  description: Events and their fields, questions, websites, folders, and badges.
+  humanURL: https://swoogo.readme.io/reference/get_events
+  baseURL: https://api.swoogo.com/api/v1
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/swoogo-events-api-openapi.yml
+  - type: Documentation
+    url: https://swoogo.readme.io/docs
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_events
+  - type: PostmanCollection
+    url: collections/swoogo.postman_collection.json
+  - type: OpenCollection
+    url: collections/swoogo.opencollection.json
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_registrants
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_sessions
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_speakers
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_contacts
+- aid: swoogo:swoogo-registrants-api
+  name: Swoogo Registrants API
+  description: Attendees, check-in, groups, session registration, and types.
+  humanURL: https://swoogo.readme.io/reference/get_events
+  baseURL: https://api.swoogo.com/api/v1
+  tags:
+  - Registrants
+  properties:
+  - type: OpenAPI
+    url: openapi/swoogo-registrants-api-openapi.yml
+  - type: Documentation
+    url: https://swoogo.readme.io/docs
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_events
+  - type: PostmanCollection
+    url: collections/swoogo.postman_collection.json
+  - type: OpenCollection
+    url: collections/swoogo.opencollection.json
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_registrants
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_sessions
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_speakers
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_contacts
+- aid: swoogo:swoogo-sessions-api
+  name: Swoogo Sessions API
+  description: Agenda sessions, locations, fees, attendance, and scans.
+  humanURL: https://swoogo.readme.io/reference/get_events
+  baseURL: https://api.swoogo.com/api/v1
+  tags:
+  - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/swoogo-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://swoogo.readme.io/docs
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_events
+  - type: PostmanCollection
+    url: collections/swoogo.postman_collection.json
+  - type: OpenCollection
+    url: collections/swoogo.opencollection.json
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_registrants
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_sessions
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_speakers
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_contacts
+- aid: swoogo:swoogo-speakers-api
+  name: Swoogo Speakers API
+  description: Speakers and their session assignments.
+  humanURL: https://swoogo.readme.io/reference/get_events
+  baseURL: https://api.swoogo.com/api/v1
+  tags:
+  - Speakers
+  properties:
+  - type: OpenAPI
+    url: openapi/swoogo-speakers-api-openapi.yml
+  - type: Documentation
+    url: https://swoogo.readme.io/docs
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_events
+  - type: PostmanCollection
+    url: collections/swoogo.postman_collection.json
+  - type: OpenCollection
+    url: collections/swoogo.opencollection.json
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_registrants
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_sessions
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_speakers
+  - type: APIReference
+    url: https://swoogo.readme.io/reference/get_contacts
 common:
 - type: AgenticAccess
   url: agentic-access/swoogo-agentic-access.yml
