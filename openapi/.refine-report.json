@@ -1,0 +1,24 @@
+{
+  "provider": "swoogo",
+  "sources": [
+    "swoogo-authentication-api-openapi.yml",
+    "swoogo-contacts-api-openapi.yml",
+    "swoogo-events-api-openapi.yml",
+    "swoogo-registrants-api-openapi.yml",
+    "swoogo-sessions-api-openapi.yml",
+    "swoogo-speakers-api-openapi.yml"
+  ],
+  "outputs": [
+    "swoogo-authentication-api-openapi.yml",
+    "swoogo-contacts-api-openapi.yml",
+    "swoogo-events-api-openapi.yml",
+    "swoogo-registrants-api-openapi.yml",
+    "swoogo-sessions-api-openapi.yml",
+    "swoogo-speakers-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

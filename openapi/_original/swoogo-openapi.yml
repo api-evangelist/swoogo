@@ -1,0 +1,798 @@
+openapi: 3.0.3
+info:
+  title: Swoogo API
+  description: >-
+    The Swoogo API is a REST API for the Swoogo event management and event
+    registration platform. It lets you programmatically manage events,
+    registrants, sessions, speakers, sponsors, tracks, packages, discount codes,
+    transactions, organization-level contacts (CRM), call-for-speakers
+    submissions, invitation lists, and webhooks. The base URL is
+    https://api.swoogo.com/api/v1. Authentication uses OAuth2 client credentials:
+    Base64-encode your API key and secret (found in the Swoogo app under
+    My Profile > API Credentials), exchange them at POST /oauth2/token for a
+    bearer token, then send that token as an Authorization: Bearer header.
+    Bearer tokens expire every 30 minutes. This document models a representative
+    subset of the roughly 140 documented endpoints; the full reference is at
+    https://swoogo.readme.io/reference. Endpoint paths are grounded in the
+    published Swoogo API documentation; request/response schemas below are
+    illustrative and should be verified against the live reference.
+  version: '1.0'
+  contact:
+    name: Swoogo
+    url: https://developer.swoogo.com
+  termsOfService: https://swoogo.events
+servers:
+  - url: https://api.swoogo.com/api/v1
+    description: Swoogo production API
+security:
+  - bearerAuth: []
+tags:
+  - name: Authentication
+    description: OAuth2 client-credentials token exchange.
+  - name: Events
+    description: Events and their fields, questions, websites, folders, and badges.
+  - name: Registrants
+    description: Attendees, check-in, groups, session registration, and types.
+  - name: Sessions
+    description: Agenda sessions, locations, fees, attendance, and scans.
+  - name: Speakers
+    description: Speakers and their session assignments.
+  - name: Contacts
+    description: Organization-level CRM contacts and contact fields.
+paths:
+  /oauth2/token:
+    post:
+      operationId: createToken
+      tags:
+        - Authentication
+      summary: Request an API token
+      description: >-
+        Exchanges Base64-encoded client credentials for a bearer token using the
+        OAuth2 client_credentials grant. Send the encoded key:secret in an
+        Authorization Basic header and grant_type=client_credentials as a
+        form-encoded body. The returned token expires after 30 minutes.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - grant_type
+              properties:
+                grant_type:
+                  type: string
+                  enum: [client_credentials]
+      responses:
+        '200':
+          description: A bearer token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type:
+                    type: string
+                    example: Bearer
+                  access_token:
+                    type: string
+                  expires_at:
+                    type: string
+                    description: UTC timestamp at which the token expires.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /events:
+    get:
+      operationId: listEvents
+      tags:
+        - Events
+      summary: Get all events
+      description: Returns a paginated list of events in your Swoogo account.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Fields'
+      responses:
+        '200':
+          description: A list of events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createEvent
+      tags:
+        - Events
+      summary: Create an event
+      description: Creates a new event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: The created event.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /events/{event_id}:
+    parameters:
+      - $ref: '#/components/parameters/EventId'
+    get:
+      operationId: getEvent
+      tags:
+        - Events
+      summary: Get one event
+      description: Retrieves a single event by ID.
+      responses:
+        '200':
+          description: The requested event.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateEvent
+      tags:
+        - Events
+      summary: Update an event
+      description: Updates an existing event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '200':
+          description: The updated event.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /events/{event_id}/clone:
+    parameters:
+      - $ref: '#/components/parameters/EventId'
+    post:
+      operationId: cloneEvent
+      tags:
+        - Events
+      summary: Clone an event
+      description: Creates a copy of an existing event.
+      responses:
+        '201':
+          description: The cloned event.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /registrants:
+    get:
+      operationId: listRegistrants
+      tags:
+        - Registrants
+      summary: Get all registrants
+      description: Returns a paginated list of registrants, optionally filtered by event.
+      parameters:
+        - name: event_id
+          in: query
+          schema:
+            type: integer
+          description: Filter registrants by event.
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A list of registrants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrantList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createRegistrant
+      tags:
+        - Registrants
+      summary: Create a registrant
+      description: Registers a new attendee for an event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registrant'
+      responses:
+        '201':
+          description: The created registrant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registrant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /registrants/{registrant_id}:
+    parameters:
+      - $ref: '#/components/parameters/RegistrantId'
+    get:
+      operationId: getRegistrant
+      tags:
+        - Registrants
+      summary: Get one registrant
+      description: Retrieves a single registrant by ID.
+      responses:
+        '200':
+          description: The requested registrant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registrant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateRegistrant
+      tags:
+        - Registrants
+      summary: Update a registrant
+      description: Updates an existing registrant.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registrant'
+      responses:
+        '200':
+          description: The updated registrant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registrant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /registrants/{registrant_id}/check-in:
+    parameters:
+      - $ref: '#/components/parameters/RegistrantId'
+    post:
+      operationId: checkInRegistrant
+      tags:
+        - Registrants
+      summary: Check a registrant in
+      description: Marks a registrant as checked in to the event.
+      responses:
+        '200':
+          description: The updated registrant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registrant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /sessions:
+    get:
+      operationId: listSessions
+      tags:
+        - Sessions
+      summary: Get all sessions
+      description: Returns a paginated list of agenda sessions, optionally filtered by event.
+      parameters:
+        - name: event_id
+          in: query
+          schema:
+            type: integer
+          description: Filter sessions by event.
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A list of sessions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createSession
+      tags:
+        - Sessions
+      summary: Create a session
+      description: Creates a new agenda session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session'
+      responses:
+        '201':
+          description: The created session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /sessions/{session_id}:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      operationId: getSession
+      tags:
+        - Sessions
+      summary: Get one session
+      description: Retrieves a single session by ID.
+      responses:
+        '200':
+          description: The requested session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateSession
+      tags:
+        - Sessions
+      summary: Update a session
+      description: Updates an existing session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session'
+      responses:
+        '200':
+          description: The updated session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      operationId: deleteSession
+      tags:
+        - Sessions
+      summary: Delete a session
+      description: Deletes a session.
+      responses:
+        '204':
+          description: The session was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /speakers:
+    get:
+      operationId: listSpeakers
+      tags:
+        - Speakers
+      summary: Get all speakers
+      description: Returns a paginated list of speakers, optionally filtered by event.
+      parameters:
+        - name: event_id
+          in: query
+          schema:
+            type: integer
+          description: Filter speakers by event.
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A list of speakers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeakerList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createSpeaker
+      tags:
+        - Speakers
+      summary: Create a speaker
+      description: Creates a new speaker.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Speaker'
+      responses:
+        '201':
+          description: The created speaker.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Speaker'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /speakers/{speaker_id}:
+    parameters:
+      - $ref: '#/components/parameters/SpeakerId'
+    get:
+      operationId: getSpeaker
+      tags:
+        - Speakers
+      summary: Get one speaker
+      description: Retrieves a single speaker by ID.
+      responses:
+        '200':
+          description: The requested speaker.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Speaker'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteSpeaker
+      tags:
+        - Speakers
+      summary: Delete a speaker
+      description: Deletes a speaker.
+      responses:
+        '204':
+          description: The speaker was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /speakers/{speaker_id}/sessions/{session_id}:
+    parameters:
+      - $ref: '#/components/parameters/SpeakerId'
+      - $ref: '#/components/parameters/SessionId'
+    post:
+      operationId: assignSpeakerSession
+      tags:
+        - Speakers
+      summary: Assign a speaker to a session
+      description: Assigns a speaker to a session.
+      responses:
+        '201':
+          description: The assignment was created.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      operationId: removeSpeakerSession
+      tags:
+        - Speakers
+      summary: Remove a speaker from a session
+      description: Removes a speaker's assignment from a session.
+      responses:
+        '204':
+          description: The assignment was removed.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /contacts:
+    get:
+      operationId: listContacts
+      tags:
+        - Contacts
+      summary: Get all contacts
+      description: Returns a paginated list of organization-level CRM contacts.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A list of contacts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createContact
+      tags:
+        - Contacts
+      summary: Create a contact
+      description: Creates a new organization-level contact.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '201':
+          description: The created contact.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /contacts/{contact_id}:
+    parameters:
+      - $ref: '#/components/parameters/ContactId'
+    get:
+      operationId: getContact
+      tags:
+        - Contacts
+      summary: Get one contact
+      description: Retrieves a single contact by ID.
+      responses:
+        '200':
+          description: The requested contact.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateContact
+      tags:
+        - Contacts
+      summary: Update a contact
+      description: Updates an existing contact.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '200':
+          description: The updated contact.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /contacts/{contact_id}/forget:
+    parameters:
+      - $ref: '#/components/parameters/ContactId'
+    post:
+      operationId: forgetContact
+      tags:
+        - Contacts
+      summary: Forget a contact (GDPR)
+      description: Anonymizes/forgets a contact to satisfy GDPR erasure requests.
+      responses:
+        '200':
+          description: The contact was forgotten.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        Bearer token obtained from POST /oauth2/token using the OAuth2
+        client_credentials grant. Tokens expire every 30 minutes.
+  parameters:
+    EventId:
+      name: event_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The event ID.
+    RegistrantId:
+      name: registrant_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The registrant ID.
+    SessionId:
+      name: session_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The session ID.
+    SpeakerId:
+      name: speaker_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The speaker ID.
+    ContactId:
+      name: contact_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The contact ID.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number for paginated results.
+    PageSize:
+      name: per-page
+      in: query
+      schema:
+        type: integer
+      description: The number of records per page.
+    Fields:
+      name: fields
+      in: query
+      schema:
+        type: string
+      description: Comma-separated list of fields to include in the response.
+  responses:
+    Unauthorized:
+      description: The bearer token is missing, invalid, or expired.
+    NotFound:
+      description: The requested resource was not found.
+    RateLimited:
+      description: >-
+        Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute
+        window (list requests cost 10 credits, single-record requests cost 1).
+  schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        timezone:
+          type: string
+        url:
+          type: string
+        status:
+          type: string
+    EventList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        total_count:
+          type: integer
+        page:
+          type: integer
+        per_page:
+          type: integer
+    Registrant:
+      type: object
+      properties:
+        id:
+          type: integer
+        event_id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        registrant_type_id:
+          type: integer
+        checked_in:
+          type: boolean
+    RegistrantList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Registrant'
+        total_count:
+          type: integer
+    Session:
+      type: object
+      properties:
+        id:
+          type: integer
+        event_id:
+          type: integer
+        name:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        track_id:
+          type: integer
+        location_id:
+          type: integer
+    SessionList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        total_count:
+          type: integer
+    Speaker:
+      type: object
+      properties:
+        id:
+          type: integer
+        event_id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        company:
+          type: string
+        job_title:
+          type: string
+    SpeakerList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Speaker'
+        total_count:
+          type: integer
+    Contact:
+      type: object
+      properties:
+        id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        company:
+          type: string
+    ContactList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+        total_count:
+          type: integer
