@@ -1,0 +1,125 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Swoogo Authentication Contacts API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/contacts",
+            "params": [
+              {
+                "name": "per-page",
+                "value": "",
+                "type": "query",
+                "description": "The number of records per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of organization-level CRM contacts."
+        },
+        {
+          "info": {
+            "name": "Create a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new organization-level contact."
+        },
+        {
+          "info": {
+            "name": "Get one contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path",
+                "description": "The contact ID."
+              }
+            ]
+          },
+          "docs": "Retrieves a single contact by ID."
+        },
+        {
+          "info": {
+            "name": "Update a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.swoogo.com/api/v1/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path",
+                "description": "The contact ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing contact."
+        },
+        {
+          "info": {
+            "name": "Forget a contact (GDPR)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/contacts/:contact_id/forget",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path",
+                "description": "The contact ID."
+              }
+            ]
+          },
+          "docs": "Anonymizes/forgets a contact to satisfy GDPR erasure requests."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

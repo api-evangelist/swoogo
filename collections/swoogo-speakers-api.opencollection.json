@@ -1,0 +1,158 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Swoogo Authentication Speakers API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Speakers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all speakers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/speakers",
+            "params": [
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter speakers by event."
+              },
+              {
+                "name": "per-page",
+                "value": "",
+                "type": "query",
+                "description": "The number of records per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of speakers, optionally filtered by event."
+        },
+        {
+          "info": {
+            "name": "Create a speaker",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/speakers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new speaker."
+        },
+        {
+          "info": {
+            "name": "Get one speaker",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/speakers/:speaker_id",
+            "params": [
+              {
+                "name": "speaker_id",
+                "value": "",
+                "type": "path",
+                "description": "The speaker ID."
+              }
+            ]
+          },
+          "docs": "Retrieves a single speaker by ID."
+        },
+        {
+          "info": {
+            "name": "Delete a speaker",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.swoogo.com/api/v1/speakers/:speaker_id",
+            "params": [
+              {
+                "name": "speaker_id",
+                "value": "",
+                "type": "path",
+                "description": "The speaker ID."
+              }
+            ]
+          },
+          "docs": "Deletes a speaker."
+        },
+        {
+          "info": {
+            "name": "Assign a speaker to a session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/speakers/:speaker_id/sessions/:session_id",
+            "params": [
+              {
+                "name": "speaker_id",
+                "value": "",
+                "type": "path",
+                "description": "The speaker ID."
+              },
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path",
+                "description": "The session ID."
+              }
+            ]
+          },
+          "docs": "Assigns a speaker to a session."
+        },
+        {
+          "info": {
+            "name": "Remove a speaker from a session",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.swoogo.com/api/v1/speakers/:speaker_id/sessions/:session_id",
+            "params": [
+              {
+                "name": "speaker_id",
+                "value": "",
+                "type": "path",
+                "description": "The speaker ID."
+              },
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path",
+                "description": "The session ID."
+              }
+            ]
+          },
+          "docs": "Removes a speaker's assignment from a session."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

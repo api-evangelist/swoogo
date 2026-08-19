@@ -1,0 +1,202 @@
+{
+  "item": [
+    {
+      "id": "23179a90-8d79-4b26-a4d7-b143c6a419f5",
+      "name": "Authentication",
+      "description": {
+        "content": "OAuth2 client-credentials token exchange.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "22dd9966-2677-4be3-b136-8eb6313ade50",
+          "name": "Request an API token",
+          "request": {
+            "name": "Request an API token",
+            "description": {
+              "content": "Exchanges Base64-encoded client credentials for a bearer token using the OAuth2 client_credentials grant. Send the encoded key:secret in an Authorization Basic header and grant_type=client_credentials as a form-encoded body. The returned token expires after 30 minutes.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oauth2",
+                "token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "grant_type",
+                  "value": "<string>",
+                  "description": "(Required) "
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "fc89bbd6-1438-4963-a3a1-97b7a3674c28",
+              "name": "A bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth2",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "grant_type",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"token_type\": \"Bearer\",\n  \"access_token\": \"string\",\n  \"expires_at\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "645f1854-58fc-49c4-bfbb-b88304d69afb",
+              "name": "The bearer token is missing, invalid, or expired.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth2",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "grant_type",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.swoogo.com/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "6f296427-3752-40ea-a780-f999c737a7ed",
+    "name": "Swoogo Authentication API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Swoogo API is a REST API for the Swoogo event management and event registration platform. It lets you programmatically manage events, registrants, sessions, speakers, sponsors, tracks, packages, discount codes, transactions, organization-level contacts (CRM), call-for-speakers submissions, invitation lists, and webhooks. The base URL is https://api.swoogo.com/api/v1. Authentication uses OAuth2 client credentials: Base64-encode your API key and secret (found in the Swoogo app under My Profile > API Credentials), exchange them at POST /oauth2/token for a bearer token, then send that token as an Authorization: Bearer header. Bearer tokens expire every 30 minutes. This document models a representative subset of the roughly 140 documented endpoints; the full reference is at https://swoogo.readme.io/reference. Endpoint paths are grounded in the published Swoogo API documentation; request/response schemas below are illustrative and should be verified against the live reference.\n\nContact Support:\n Name: Swoogo",
+      "type": "text/plain"
+    }
+  }
+}

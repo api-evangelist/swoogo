@@ -1,0 +1,131 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Swoogo Authentication Sessions API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/sessions",
+            "params": [
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter sessions by event."
+              },
+              {
+                "name": "per-page",
+                "value": "",
+                "type": "query",
+                "description": "The number of records per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of agenda sessions, optionally filtered by event."
+        },
+        {
+          "info": {
+            "name": "Create a session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/sessions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new agenda session."
+        },
+        {
+          "info": {
+            "name": "Get one session",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/sessions/:session_id",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path",
+                "description": "The session ID."
+              }
+            ]
+          },
+          "docs": "Retrieves a single session by ID."
+        },
+        {
+          "info": {
+            "name": "Update a session",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.swoogo.com/api/v1/sessions/:session_id",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path",
+                "description": "The session ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing session."
+        },
+        {
+          "info": {
+            "name": "Delete a session",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.swoogo.com/api/v1/sessions/:session_id",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path",
+                "description": "The session ID."
+              }
+            ]
+          },
+          "docs": "Deletes a session."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

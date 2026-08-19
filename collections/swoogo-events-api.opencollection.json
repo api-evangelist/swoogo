@@ -1,0 +1,131 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Swoogo Authentication Events API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/events",
+            "params": [
+              {
+                "name": "per-page",
+                "value": "",
+                "type": "query",
+                "description": "The number of records per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number for paginated results."
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to include in the response."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of events in your Swoogo account."
+        },
+        {
+          "info": {
+            "name": "Create an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/events",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new event."
+        },
+        {
+          "info": {
+            "name": "Get one event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/events/:event_id",
+            "params": [
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "path",
+                "description": "The event ID."
+              }
+            ]
+          },
+          "docs": "Retrieves a single event by ID."
+        },
+        {
+          "info": {
+            "name": "Update an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.swoogo.com/api/v1/events/:event_id",
+            "params": [
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "path",
+                "description": "The event ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing event."
+        },
+        {
+          "info": {
+            "name": "Clone an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/events/:event_id/clone",
+            "params": [
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "path",
+                "description": "The event ID."
+              }
+            ]
+          },
+          "docs": "Creates a copy of an existing event."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,131 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Swoogo Authentication Registrants API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Registrants",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all registrants",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/registrants",
+            "params": [
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter registrants by event."
+              },
+              {
+                "name": "per-page",
+                "value": "",
+                "type": "query",
+                "description": "The number of records per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of registrants, optionally filtered by event."
+        },
+        {
+          "info": {
+            "name": "Create a registrant",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/registrants",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Registers a new attendee for an event."
+        },
+        {
+          "info": {
+            "name": "Get one registrant",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.swoogo.com/api/v1/registrants/:registrant_id",
+            "params": [
+              {
+                "name": "registrant_id",
+                "value": "",
+                "type": "path",
+                "description": "The registrant ID."
+              }
+            ]
+          },
+          "docs": "Retrieves a single registrant by ID."
+        },
+        {
+          "info": {
+            "name": "Update a registrant",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.swoogo.com/api/v1/registrants/:registrant_id",
+            "params": [
+              {
+                "name": "registrant_id",
+                "value": "",
+                "type": "path",
+                "description": "The registrant ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing registrant."
+        },
+        {
+          "info": {
+            "name": "Check a registrant in",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.swoogo.com/api/v1/registrants/:registrant_id/check-in",
+            "params": [
+              {
+                "name": "registrant_id",
+                "value": "",
+                "type": "path",
+                "description": "The registrant ID."
+              }
+            ]
+          },
+          "docs": "Marks a registrant as checked in to the event."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
