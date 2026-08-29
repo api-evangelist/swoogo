@@ -11,6 +11,18 @@ description: Swoogo is an event management and event registration platform for b
   (CRM), call-for-speakers submissions, invitation lists, and webhooks - roughly
   140 endpoints. Access requires a paid Swoogo subscription; API credentials are
   issued from My Profile > API Credentials in the Swoogo app.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: self-serve
