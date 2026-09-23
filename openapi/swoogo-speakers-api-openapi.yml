@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Swoogo Authentication Speakers API
-  description: 'The Swoogo API is a REST API for the Swoogo event management and event registration platform. It lets you programmatically manage events, registrants, sessions, speakers, sponsors, tracks, packages, discount codes, transactions, organization-level contacts (CRM), call-for-speakers submissions, invitation lists, and webhooks. The base URL is https://api.swoogo.com/api/v1. Authentication uses OAuth2 client credentials: Base64-encode your API key and secret (found in the Swoogo app under My Profile > API Credentials), exchange them at POST /oauth2/token for a bearer token, then send that token as an Authorization: Bearer header. Bearer tokens expire every 30 minutes. This document models a representative subset of the roughly 140 documented endpoints; the full reference is at https://swoogo.readme.io/reference. Endpoint paths are grounded in the published Swoogo API documentation; request/response schemas below are illustrative and should be verified against the live reference.'
+  title: Swoogo Speakers API
+  description: The Swoogo API is a REST API for the Swoogo event management and event registration platform.
   version: '1.0'
   contact:
     name: Swoogo
@@ -121,6 +121,33 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  schemas:
+    SpeakerList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Speaker'
+        total_count:
+          type: integer
+    Speaker:
+      type: object
+      properties:
+        id:
+          type: integer
+        event_id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        company:
+          type: string
+        job_title:
+          type: string
   parameters:
     SpeakerId:
       name: speaker_id
@@ -155,33 +182,6 @@ components:
       description: The requested resource was not found.
     Unauthorized:
       description: The bearer token is missing, invalid, or expired.
-  schemas:
-    SpeakerList:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Speaker'
-        total_count:
-          type: integer
-    Speaker:
-      type: object
-      properties:
-        id:
-          type: integer
-        event_id:
-          type: integer
-        first_name:
-          type: string
-        last_name:
-          type: string
-        email:
-          type: string
-        company:
-          type: string
-        job_title:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http
