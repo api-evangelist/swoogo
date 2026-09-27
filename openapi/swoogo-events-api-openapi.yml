@@ -120,19 +120,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    EventList:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Event'
-        total_count:
-          type: integer
-        page:
-          type: integer
-        per_page:
-          type: integer
     Event:
       type: object
       properties:
@@ -152,6 +139,19 @@ components:
           type: string
         status:
           type: string
+    EventList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        total_count:
+          type: integer
+        page:
+          type: integer
+        per_page:
+          type: integer
   parameters:
     EventId:
       name: event_id
@@ -160,6 +160,12 @@ components:
       schema:
         type: integer
       description: The event ID.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number for paginated results.
     PageSize:
       name: per-page
       in: query
@@ -172,19 +178,13 @@ components:
       schema:
         type: string
       description: Comma-separated list of fields to include in the response.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: The page number for paginated results.
   responses:
+    Unauthorized:
+      description: The bearer token is missing, invalid, or expired.
     RateLimited:
       description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
     NotFound:
       description: The requested resource was not found.
-    Unauthorized:
-      description: The bearer token is missing, invalid, or expired.
   securitySchemes:
     bearerAuth:
       type: http

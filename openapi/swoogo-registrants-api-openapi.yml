@@ -150,19 +150,26 @@ components:
           type: integer
         checked_in:
           type: boolean
+  responses:
+    Unauthorized:
+      description: The bearer token is missing, invalid, or expired.
+    RateLimited:
+      description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
+    NotFound:
+      description: The requested resource was not found.
   parameters:
-    PageSize:
-      name: per-page
-      in: query
-      schema:
-        type: integer
-      description: The number of records per page.
     Page:
       name: page
       in: query
       schema:
         type: integer
       description: The page number for paginated results.
+    PageSize:
+      name: per-page
+      in: query
+      schema:
+        type: integer
+      description: The number of records per page.
     RegistrantId:
       name: registrant_id
       in: path
@@ -170,13 +177,6 @@ components:
       schema:
         type: integer
       description: The registrant ID.
-  responses:
-    RateLimited:
-      description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
-    NotFound:
-      description: The requested resource was not found.
-    Unauthorized:
-      description: The bearer token is missing, invalid, or expired.
   securitySchemes:
     bearerAuth:
       type: http
