@@ -116,7 +116,20 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    RateLimited:
+      description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: The bearer token is missing, invalid, or expired.
   parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number for paginated results.
     SessionId:
       name: session_id
       in: path
@@ -124,12 +137,6 @@ components:
       schema:
         type: integer
       description: The session ID.
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: The page number for paginated results.
     PageSize:
       name: per-page
       in: query
@@ -137,15 +144,6 @@ components:
         type: integer
       description: The number of records per page.
   schemas:
-    SessionList:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Session'
-        total_count:
-          type: integer
     Session:
       type: object
       properties:
@@ -165,13 +163,15 @@ components:
           type: integer
         location_id:
           type: integer
-  responses:
-    Unauthorized:
-      description: The bearer token is missing, invalid, or expired.
-    RateLimited:
-      description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
-    NotFound:
-      description: The requested resource was not found.
+    SessionList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        total_count:
+          type: integer
   securitySchemes:
     bearerAuth:
       type: http
