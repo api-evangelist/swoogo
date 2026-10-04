@@ -119,17 +119,11 @@ components:
   responses:
     RateLimited:
       description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
-    NotFound:
-      description: The requested resource was not found.
     Unauthorized:
       description: The bearer token is missing, invalid, or expired.
+    NotFound:
+      description: The requested resource was not found.
   parameters:
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: The page number for paginated results.
     SessionId:
       name: session_id
       in: path
@@ -143,7 +137,22 @@ components:
       schema:
         type: integer
       description: The number of records per page.
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number for paginated results.
   schemas:
+    SessionList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        total_count:
+          type: integer
     Session:
       type: object
       properties:
@@ -162,15 +171,6 @@ components:
         track_id:
           type: integer
         location_id:
-          type: integer
-    SessionList:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Session'
-        total_count:
           type: integer
   securitySchemes:
     bearerAuth:
