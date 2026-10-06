@@ -54,7 +54,7 @@ tags_raw:
 - Attendees
 - SaaS
 created: '2026-07-05'
-modified: '2026-07-05'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
 - aid: swoogo:swoogo-authentication-api
@@ -216,6 +216,8 @@ apis:
   - type: APIReference
     url: https://swoogo.readme.io/reference/get_contacts
 common:
+- url: https://swoogo.events/feed/
+  type: BlogRSS
 - type: AgenticAccess
   url: agentic-access/swoogo-agentic-access.yml
 - type: TrustCenter
