@@ -120,26 +120,13 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   responses:
-    RateLimited:
-      description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
     Unauthorized:
       description: The bearer token is missing, invalid, or expired.
+    RateLimited:
+      description: Rate limit exceeded. Swoogo allows 2000 credits per rolling 10-minute window (list requests cost 10 credits, single-record requests cost 1).
     NotFound:
       description: The requested resource was not found.
   parameters:
-    Fields:
-      name: fields
-      in: query
-      schema:
-        type: string
-      description: Comma-separated list of fields to include in the response.
-    EventId:
-      name: event_id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: The event ID.
     PageSize:
       name: per-page
       in: query
@@ -152,20 +139,20 @@ components:
       schema:
         type: integer
       description: The page number for paginated results.
+    EventId:
+      name: event_id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The event ID.
+    Fields:
+      name: fields
+      in: query
+      schema:
+        type: string
+      description: Comma-separated list of fields to include in the response.
   schemas:
-    EventList:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Event'
-        total_count:
-          type: integer
-        page:
-          type: integer
-        per_page:
-          type: integer
     Event:
       type: object
       properties:
@@ -185,6 +172,19 @@ components:
           type: string
         status:
           type: string
+    EventList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        total_count:
+          type: integer
+        page:
+          type: integer
+        per_page:
+          type: integer
   securitySchemes:
     bearerAuth:
       type: http
