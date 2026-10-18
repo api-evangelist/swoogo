@@ -27,7 +27,7 @@
     - connectors/applications/swoogo
     vendor_link: https://swoogo.events/
     builder: Fivetran
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: swoogo-zoom-own
   label: Zoom (own)
